@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+
+"""功能描述.
+    Inputs:
+        breps:breps
+        target_layer:target_layer
+        layerNames:layerNames
+        layersColorsRGB:layersColorsRGB
+        file_path:file_path
+        Trigger:Trigger
+
+
+    Output:
+        :
+
+
+        """
+
+
+import System
+import Rhino
+import Grasshopper
+
+
+import rhinoscriptsyntax as rs
+
+
+
+
+class MyComponent(Grasshopper.Kernel.GH_ScriptInstance):
+    def RunScript(self,
+            breps: System.Collections.Generic.IList[object],
+            target_layer: System.Collections.Generic.IList[str],
+            layerNames: System.Collections.Generic.IList[object],
+            layersColorsRGB: System.Collections.Generic.IList[System.Drawing.Color],
+            file_path,
+            Trigger):
+        __author__ = "Adrian Tse"
+        __Email__  = "xiexiangjie10@outlook.com"
+        __version__ = "2024.11.14"
+        
+        from datetime import datetime
+        time_01 = datetime.now().strftime("%G%m%d")
+        
+        ghenv.Component.Name = 'Export Object To 3dm File'
+        ghenv.Component.NickName = 'Export Object To 3dm File'
+        ghenv.Component.Description = 'Export Object To 3dm File'
+        ghenv.Component.Message = file_path+"_"+time_01+".3dm"
+        ghenv.Component.Category = 'Adrian'
+        ghenv.Component.SubCategory = 'Tool'
+        ghenv.Component.AdditionalHelpFromDocStrings = ''
+        
+        
+        import Rhino
+        import rhinoscriptsyntax as rs
+        import System
+        
+        layer_indexes = {}
+        new_file = Rhino.FileIO.File3dm()
+        new_file.Settings.ModelUnitSystem = Rhino.UnitSystem.Millimeters
+        layers = new_file.AllLayers
+        
+        if target_layer ==None :
+            target_layer = "default"
+        if layerNames ==None :
+            layerNames = "default"
+        if layersColorsRGB ==None :
+            layersColorsRGB = [System.Drawing.Color.White] * len (target_layer)
+        
+        for name, color in zip(layerNames, layersColorsRGB):
+            layer_indexes[name] = layers.AddLayer(name, color)
+        
+        for brep, layer in zip(breps, target_layer):
+            new_attributes = Rhino.DocObjects.ObjectAttributes()
+            new_attributes.LayerIndex = layer_indexes[layer]
+            new_file.Objects.AddBrep(brep, new_attributes)
+        
+        
+        
+        if Trigger == True:
+            time = datetime.now().strftime("%y%m%d")
+            print (new_file.Write (file_path+"_"+time+".3dm", 0))
+        return
+
