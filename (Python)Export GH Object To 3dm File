@@ -76,3 +76,4 @@ class MyComponent(Grasshopper.Kernel.GH_ScriptInstance):
             time = datetime.now().strftime("%y%m%d")
             print (new_file.Write (file_path+"_"+time+".3dm", 0))
         return
+
