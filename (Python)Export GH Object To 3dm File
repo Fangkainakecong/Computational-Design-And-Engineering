@@ -1,38 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 """功能描述.
     Inputs:
-        breps:breps
-        target_layer:target_layer
-        layerNames:layerNames
-        layersColorsRGB:layersColorsRGB
-        file_path:file_path
-        Trigger:Trigger
-
+        breps: x
+        target_layer: x
+        layerNames: x
+        layersColorsRGB: x
+        file_path: x
+        Trigger: x
 
     Output:
-        :
-
+        : 
 
         """
-
 
 import System
 import Rhino
 import Grasshopper
 
-
 import rhinoscriptsyntax as rs
-
-
 
 
 class MyComponent(Grasshopper.Kernel.GH_ScriptInstance):
     def RunScript(self,
             breps: System.Collections.Generic.IList[object],
-            target_layer: System.Collections.Generic.IList[str],
+            target_layer: System.Collections.Generic.IList[object],
             layerNames: System.Collections.Generic.IList[object],
             layersColorsRGB: System.Collections.Generic.IList[System.Drawing.Color],
             file_path,
@@ -69,7 +62,7 @@ class MyComponent(Grasshopper.Kernel.GH_ScriptInstance):
         if layersColorsRGB ==None :
             layersColorsRGB = [System.Drawing.Color.White] * len (target_layer)
         
-        for name, color in zip(layerNames, layersColorsRGB):
+        for name, color in zip(layerNames, layersColorsRGB): 
             layer_indexes[name] = layers.AddLayer(name, color)
         
         for brep, layer in zip(breps, target_layer):
@@ -83,4 +76,3 @@ class MyComponent(Grasshopper.Kernel.GH_ScriptInstance):
             time = datetime.now().strftime("%y%m%d")
             print (new_file.Write (file_path+"_"+time+".3dm", 0))
         return
-
